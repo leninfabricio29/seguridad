@@ -1,0 +1,25 @@
+{# Este archivo estaba vacio, por lo que app_detail.html renderizaba una pagina
+   en blanco. Ahora reutiliza la base del sitio comercial y solo agrega el
+   contenedor y los estilos de tipografia que las plantillas de releases
+   esperan, sin tocar app_detail.html. #}
+{% extends "marketing/base.html" %}
+
+{% block main_class %}mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8{% endblock %}
+
+{% block extra_head %}
+<style>
+  main h2 { font-size: 1.875rem; font-weight: 900; color: #0f172a; letter-spacing: -0.025em; }
+  main h3 { margin-top: 2.5rem; font-size: 1.25rem; font-weight: 700; color: #1e338c; }
+  main p  { margin-top: 0.75rem; color: #475569; line-height: 1.7; }
+  main table { width: 100%; margin-top: 1rem; border-collapse: collapse; font-size: 0.875rem; }
+  main th { text-align: left; padding: 0.75rem; background: #eef4ff; color: #1e35b2;
+            font-weight: 700; border-bottom: 1px solid #bfd5ff; }
+  main td { padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: #334155; }
+  main a  { color: #2450f0; font-weight: 600; text-decoration: none; }
+  main a:hover { text-decoration: underline; }
+  main details { margin-top: 0.75rem; padding: 1rem; border: 1px solid #e2e8f0; border-radius: 0.75rem; }
+  main summary { cursor: pointer; font-weight: 600; color: #1e338c; }
+  main .tag { display: inline-block; padding: 0.125rem 0.5rem; border-radius: 9999px;
+              background: #fef3c7; color: #92400e; font-size: 0.75rem; font-weight: 600; }
+</style>
+{% endblock %}

@@ -1,0 +1,208 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}{{ site_brand }} - {{ site_tagline }}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Sistemas de seguridad para personas, familias y entidades de seguridad. Alertas de emergencia, boton de panico, rastreo y telemetria vehicular.{% endblock %}" />
+    <meta property="og:title" content="{{ site_brand }}" />
+    <meta property="og:description" content="{{ site_tagline }}" />
+    <meta property="og:type" content="website" />
+    <!-- IMAGEN PENDIENTE: og-image de 1200x630 px. Subila a static/img/og-image.jpg -->
+    <meta property="og:image" content="{% static 'img/og-image.jpg' %}" />
+    <meta name="theme-color" content="#141f52" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232450f0' stroke-width='2'><path d='M12 3l7 3v5c0 4.42-2.99 8.54-7 9.75C7.99 19.54 5 15.42 5 11V6l7-3z'/></svg>" />
+
+    <!-- Tailwind por CDN (maquetado). En produccion conviene compilarlo localmente. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Inter", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"] },
+            colors: {
+              /* Azul electrico: primario, mucho mas saturado que un azul institucional */
+              brand: {
+                50:  "#eef4ff",
+                100: "#dbe7ff",
+                200: "#bfd5ff",
+                300: "#93b9ff",
+                400: "#6092ff",
+                500: "#3b6dfb",
+                600: "#2450f0",
+                700: "#1c3ddc",
+                800: "#1e35b2",
+                900: "#1e338c",
+                950: "#141f52"
+              },
+              /* Cian: acento de energia, datos y monitoreo en vivo */
+              accent: {
+                50:  "#ecfeff",
+                100: "#cffafe",
+                200: "#a5f3fc",
+                300: "#67e8f9",
+                400: "#22d3ee",
+                500: "#06b6d4",
+                600: "#0891b2",
+                700: "#0e7490",
+                900: "#164e63"
+              },
+              /* Rojo emergencia: SOLO para panico y alertas, nunca decorativo */
+              alert: {
+                50:  "#fef2f2",
+                100: "#fee2e2",
+                400: "#f87171",
+                500: "#ef4444",
+                600: "#dc2626",
+                700: "#b91c1c"
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+      .text-gradient {
+        background: linear-gradient(100deg, #93b9ff 0%, #67e8f9 55%, #a5f3fc 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .glow-brand { box-shadow: 0 18px 50px -12px rgba(36, 80, 240, .55); }
+      .glow-accent { box-shadow: 0 18px 50px -12px rgba(6, 182, 212, .5); }
+      .grid-bg {
+        background-image:
+          linear-gradient(rgba(147, 185, 255, .07) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(147, 185, 255, .07) 1px, transparent 1px);
+        background-size: 56px 56px;
+      }
+      .placeholder-img {
+        background-image: linear-gradient(135deg, #e2e8f0 25%, transparent 25%),
+          linear-gradient(225deg, #e2e8f0 25%, transparent 25%),
+          linear-gradient(45deg, #e2e8f0 25%, transparent 25%),
+          linear-gradient(315deg, #e2e8f0 25%, transparent 25%);
+        background-size: 20px 20px;
+        background-color: #f1f5f9;
+      }
+      @keyframes pulse-ring {
+        0%   { box-shadow: 0 0 0 0 rgba(220, 38, 38, .45); }
+        70%  { box-shadow: 0 0 0 18px rgba(220, 38, 38, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+      }
+      .panic-pulse { animation: pulse-ring 2.4s cubic-bezier(.66, 0, 0, 1) infinite; }
+    </style>
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body class="antialiased text-slate-700 bg-white">
+
+    <header class="sticky top-0 z-50 border-b border-slate-200/70 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/75">
+      <div class="h-1 w-full bg-gradient-to-r from-brand-600 via-accent-400 to-brand-600"></div>
+      <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+        <a href="{% url 'marketing:home' %}" class="flex items-center gap-3">
+          <!-- LOGO PENDIENTE: reemplazar este SVG por una etiqueta img con static 'img/logo.svg' -->
+          <span class="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-brand-600 to-accent-500 text-white shadow-lg shadow-brand-600/30">
+            <svg viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3l7 3v5c0 4.42-2.99 8.54-7 9.75C7.99 19.54 5 15.42 5 11V6l7-3z" />
+            </svg>
+          </span>
+          <span class="leading-tight">
+            <span class="block text-sm font-black tracking-tight text-brand-900 sm:text-base">{{ site_brand }}</span>
+            <span class="hidden text-xs text-slate-500 sm:block">{{ site_tagline }}</span>
+          </span>
+        </a>
+
+        <nav class="hidden items-center gap-6 text-sm font-medium text-slate-600 lg:flex">
+          <a href="{% url 'marketing:home' %}#personas" class="transition hover:text-brand-700">Para ti</a>
+          <a href="{% url 'marketing:home' %}#empresas" class="transition hover:text-brand-700">Para empresas</a>
+          <a href="{% url 'marketing:home' %}#planes" class="transition hover:text-brand-700">Planes</a>
+          <a href="{% url 'marketing:home' %}#descarga" class="transition hover:text-brand-700">Descargar app</a>
+          <a href="{% url 'marketing:home' %}#faq" class="transition hover:text-brand-700">Preguntas</a>
+        </nav>
+
+        <a href="{{ whatsapp_general_url }}" target="_blank" rel="noopener"
+           class="inline-flex shrink-0 items-center gap-2 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-brand-600/30 transition hover:from-brand-700 hover:to-brand-600">
+          <svg viewBox="0 0 24 24" class="size-4" fill="currentColor" aria-hidden="true">
+            <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.67c2.2 0 4.27.86 5.82 2.42a8.19 8.19 0 0 1 2.42 5.83c0 4.54-3.7 8.24-8.25 8.24a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.18 8.18 0 0 1-1.26-4.38c0-4.54 3.7-8.25 8.25-8.25m4.52 10.4c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.15.16-.29.18-.53.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.12-.15.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.13-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.87.85-.87 2.07 0 1.22.89 2.4 1.02 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.11-.22-.17-.47-.29" />
+          </svg>
+          <span class="hidden sm:inline">Contactar</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="{% block main_class %}{% endblock %}">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="relative overflow-hidden bg-brand-950 text-slate-300">
+      <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-500 via-accent-400 to-alert-500"></div>
+      <div class="grid-bg absolute inset-0 opacity-40"></div>
+      <div class="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div class="grid gap-10 md:grid-cols-4">
+          <div class="md:col-span-2">
+            <div class="flex items-center gap-3">
+              <span class="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-brand-500 to-accent-500 text-white">
+                <svg viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3l7 3v5c0 4.42-2.99 8.54-7 9.75C7.99 19.54 5 15.42 5 11V6l7-3z" />
+                </svg>
+              </span>
+              <p class="text-lg font-black text-white">{{ site_brand }}</p>
+            </div>
+            <p class="mt-4 max-w-md text-sm leading-relaxed text-slate-400">
+              {{ site_tagline }}. Protegemos a personas y familias, y damos a las entidades de
+              seguridad el control operativo que necesitan para responder a tiempo.
+            </p>
+          </div>
+
+          <div>
+            <p class="text-sm font-bold uppercase tracking-wider text-white">Sitio</p>
+            <ul class="mt-4 space-y-2 text-sm">
+              <li><a href="{% url 'marketing:home' %}#personas" class="transition hover:text-white">Para personas</a></li>
+              <li><a href="{% url 'marketing:home' %}#empresas" class="transition hover:text-white">Para entidades</a></li>
+              <li><a href="{% url 'marketing:home' %}#planes" class="transition hover:text-white">Planes</a></li>
+              <li><a href="{% url 'marketing:home' %}#descarga" class="transition hover:text-white">Descargar la app</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <p class="text-sm font-bold uppercase tracking-wider text-white">Contacto y legal</p>
+            <ul class="mt-4 space-y-2 text-sm">
+              <li>
+                <a href="{{ whatsapp_general_url }}" target="_blank" rel="noopener" class="transition hover:text-white">
+                  WhatsApp {{ whatsapp_number_display }}
+                </a>
+              </li>
+              <li><a href="{% url 'releases:privacy_terms' %}" class="transition hover:text-white">Privacidad y terminos</a></li>
+              <li><a href="{% url 'releases:delete_account' %}" class="transition hover:text-white">Eliminar cuenta</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-10 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-6 text-xs text-slate-400 sm:flex-row sm:items-center">
+          <p>&copy; <span id="year"></span> {{ site_brand }}. Todos los derechos reservados.</p>
+          <p class="inline-flex items-center gap-2" title="Visitas totales y visitantes unicos del sitio">
+            <svg viewBox="0 0 24 24" class="size-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" /><circle cx="12" cy="12" r="3" />
+            </svg>
+            <span><strong class="text-accent-300">{{ site_views_total }}</strong> visitas</span>
+            <span class="text-slate-600">&middot;</span>
+            <span><strong class="text-accent-300">{{ site_visitors_total }}</strong> visitantes</span>
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <a href="{{ whatsapp_general_url }}" target="_blank" rel="noopener" aria-label="Escribinos por WhatsApp"
+       class="fixed bottom-5 right-5 z-50 grid size-14 place-items-center rounded-full bg-emerald-500 text-white shadow-lg transition hover:bg-emerald-600">
+      <svg viewBox="0 0 24 24" class="size-7" fill="currentColor" aria-hidden="true">
+        <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.67c2.2 0 4.27.86 5.82 2.42a8.19 8.19 0 0 1 2.42 5.83c0 4.54-3.7 8.24-8.25 8.24a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.18 8.18 0 0 1-1.26-4.38c0-4.54 3.7-8.25 8.25-8.25m4.52 10.4c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.15.16-.29.18-.53.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.12-.15.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.13-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.87.85-.87 2.07 0 1.22.89 2.4 1.02 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.11-.22-.17-.47-.29" />
+      </svg>
+    </a>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+    {% block extra_body %}{% endblock %}
+  </body>
+</html>

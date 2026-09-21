@@ -1,0 +1,30 @@
+# Django
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+db.sqlite3
+*.sqlite3
+/media
+/staticfiles
+/static
+.env
+*.env
+*.log
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Virtualenv
+venv/
+ENV/
+env/
+.venv/

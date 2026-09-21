@@ -1,0 +1,40 @@
+{% extends "releases/base.html" %}
+{% block title %}{{ app.name }}{% endblock %}
+{% block content %}
+  <h2>{{ app.name }}</h2>
+  <p>{{ app.description }}</p>
+
+  <h3>Últimas versiones</h3>
+  <table>
+    <thead><tr><th>Plataforma</th><th>Versión</th><th>Tipo</th><th>Publicado</th><th>Descarga</th></tr></thead>
+    <tbody>
+      {% for v in app.versions.all|dictsortreversed:"created_at" %}
+      <tr>
+        <td>{{ v.get_platform_display }}</td>
+        <td><strong>{{ v.version }}</strong>{% if v.build_number %} ({{ v.build_number }}){% endif %}</td>
+        <td>{% if v.is_prerelease %}<span class="tag">Pre-release</span>{% else %}Estable{% endif %}</td>
+        <td>{{ v.created_at|date:"Y-m-d H:i" }}</td>
+        <td>
+          {% if v.file %}
+            <a href="{{ v.file.url }}">Descargar</a>
+          {% elif v.external_link %}
+            <a href="{{ v.external_link }}" target="_blank" rel="noopener">Ir al enlace</a>
+          {% else %}
+            —
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Notas de versión</h3>
+  {% for v in app.versions.all|dictsortreversed:"created_at" %}
+    <details>
+      <summary>{{ v.get_platform_display }} · {{ v.version }}{% if v.is_prerelease %} (Pre){% endif %}</summary>
+      <pre style="white-space:pre-wrap">{{ v.release_notes|default:"Sin notas." }}</pre>
+    </details>
+  {% empty %}
+    <p>Aún no hay versiones.</p>
+  {% endfor %}
+{% endblock %}

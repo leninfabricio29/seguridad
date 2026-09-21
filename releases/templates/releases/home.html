@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+  <head>
+           
+     
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ app.name|default:"Botón de Pánico - Seguridad y Comunidad" }}</title>
+    <meta name="description" content="{{ app.description|default:'La app de seguridad personal y comunitaria más completa. Protege, alerta y conecta.' }}" />
+    <meta property="og:title" content="{{ app.name|default:'Botón de Pánico - Seguridad y Comunidad' }}" />
+    <meta property="og:description" content="{{ app.description|default:'La app de seguridad personal y comunitaria más completa. Protege, alerta y conecta.' }}" />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='52' font-size='52'>🚨</text></svg>">
+    <meta property="og:image" content="/og-image.png" />
+    <meta name="theme-color" content="#0ea5e9" />
+
+    <!-- Tailwind CDN (para maquetado inicial). En producción, compila Tailwind localmente. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Configuración rápida de Tailwind para fuente y colores de la marca (ajustar luego)
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Inter", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"] },
+            colors: {
+              brand: {
+                50:  '#f0f9ff',   /* azul muy claro */
+                100: '#e0f2fe',
+                200: '#bae6fd',
+                300: '#7dd3fc',
+                400: '#38bdf8',
+                500: '#0ea5e9',   /* azul vibrante, ideal para botón de pánico */
+                600: '#0284c7',
+                700: '#0369a1',
+                800: '#075985',
+                900: '#0c4a6e',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      /* Pequeña mejora para imágenes de mockup */
+      .mockup { background: linear-gradient(135deg, rgba(6,182,212,.08), rgba(14,116,144,.08)); }
+    </style>
+  </head>
+  <body class="antialiased text-slate-800">
+    {% if apps|length == 1 and app %}
+    <!-- Header -->
+    <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-white/70 bg-white/90 border-b border-slate-200/70">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+        <a href="#" class="flex items-center gap-3">
+          <div class="size-9 rounded-xl bg-brand-500 text-white grid place-items-center font-black">SK</div>
+          <div class="leading-tight">
+            <p class="font-extrabold text-slate-900">{{ app.name }}</p>
+          </div>
+        </a>
+        <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
+          <a href="#features" class="hover:text-brand-700">Características</a>
+          <a href="#how" class="hover:text-brand-700">Cómo funciona</a>
+          <a href="#faq" class="hover:text-brand-700">FAQ</a>
+        </nav>
+        <div class="flex items-center gap-3">
+          <span class="hidden sm:inline text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-1 rounded-md">Solo Android</span>
+          {% if latest_download_url %}
+          <a href="{{ latest_download_url }}" class="inline-flex items-center gap-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 text-sm shadow-sm transition" id="download-cta">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 2H4v2h16v-2z"/></svg>
+            Descargar APK
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="relative overflow-hidden">
+      <div class="absolute inset-0 -z-10 bg-gradient-to-b from-brand-50 to-white"></div>
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 lg:py-24 grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <span class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white px-3 py-1 text-xs font-semibold text-brand-700 shadow-sm">
+            <span class="size-2 rounded-full bg-emerald-500"></span> En emergencias, cada segundo cuenta
+          </span>
+          <h1 class="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
+            Activa ayuda inmediata con un <span class="text-brand-700">solo toque</span>
+          </h1>
+          <p class="mt-4 text-lg text-slate-600 max-w-xl">
+            Envía y recibe <strong>alertas de emergencia</strong>, gestiona tus <strong>contactos de confianza</strong>, suscríbete a <strong>entidades de seguridad</strong> y personaliza tu perfil. Diseñado para reaccionar rápido.
+          </p>
+          <div class="mt-8 flex flex-wrap items-center gap-3">
+            {% if latest_download_url %}
+            <a href="{{ latest_download_url }}" class="inline-flex items-center gap-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white px-5 py-3 text-base shadow-md transition">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5"><path d="M17.6 3.84a1 1 0 0 1 1.4.2l1.8 2.4a1 1 0 0 1-.2 1.4L10.8 17.6a1 1 0 0 1-1.4-.2l-1.8-2.4a1 1 0 0 1 .2-1.4L17.6 3.84zM7.5 20.5a2.5 2.5 0 1 1 3.54-3.54A2.5 2.5 0 0 1 7.5 20.5zm9-9a2.5 2.5 0 1 1 3.54-3.54A2.5 2.5 0 0 1 16.5 11.5z"/></svg>
+              Descargar para Android
+            </a>
+            {% endif %}
+            <p class="text-xs text-slate-500">APK seguro · Instala y prueba ahora</p>
+          </div>
+          <div class="mt-6 flex items-center gap-4 text-sm text-slate-600">
+            <div class="flex items-center gap-2">
+              <span class="size-2 rounded-full bg-emerald-500"></span> Alertas en tiempo real
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="size-2 rounded-full bg-brand-500"></span> Fácil e intuitiva
+            </div>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="absolute -inset-10 -z-10 opacity-30 blur-3xl bg-gradient-to-tr from-brand-300 to-brand-600 rounded-full"></div>
+          <div class="mockup rounded-3xl p-4 ring-1 ring-slate-200 shadow-xl">
+            <!-- Placeholder de mockup: reemplazar por capturas reales -->
+            {% if reference_images and reference_images|length > 0 %}
+              <div class="aspect-[9/18] rounded-2xl bg-white grid place-items-center ring-1 ring-slate-200 overflow-hidden">
+                <img src="{{ reference_images.0.url }}" alt="{{ reference_images.0.alt|default:'Screenshot de la app' }}" class="object-contain h-full w-full rounded-2xl" />
+              </div>
+            {% else %}
+              <div class="aspect-[8/16] rounded-2xl bg-white grid place-items-center ring-1 ring-slate-200">
+                <div class="text-center px-6">
+                  <div class="mx-auto mb-4 size-16 rounded-2xl bg-brand-100 text-brand-700 grid place-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="size-10 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect width="20" height="14" x="2" y="5" rx="3" fill="currentColor" opacity="0.1"/><path stroke="currentColor" stroke-width="2" d="M2 17l5-5a3 3 0 014 0l5 5"/><circle cx="8.5" cy="9.5" r="1.5" fill="currentColor"/></svg>
+                  </div>
+                  <p class="font-semibold text-slate-900">Vista previa de la app</p>
+                  <p class="text-sm text-slate-500">Coloca aquí screenshots reales (PNG) para mayor confianza.</p>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="py-16 lg:py-24">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto">
+          <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">Todo lo que necesitas en una emergencia</h2>
+          <p class="mt-3 text-slate-600">Funciones pensadas para actuar rápido y coordinar ayuda de forma efectiva.</p>
+        </div>
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Item -->
+          <article class="rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition bg-white">
+            <div class="size-10 rounded-lg bg-brand-100 text-brand-700 grid place-items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5"><path d="M12 3a9 9 0 100 18 9 9 0 000-18zm1 4v5h4v2h-6V7h2z"/></svg>
+            </div>
+            <h3 class="mt-4 font-bold text-slate-900">Botón de pánico inmediato</h3>
+            <p class="mt-2 text-sm text-slate-600">Activa una alerta con un toque. Comparte ubicación y abre una pantalla de ayuda completa.</p>
+          </article>
+          <!-- Item -->
+          <article class="rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition bg-white">
+            <div class="size-10 rounded-lg bg-brand-100 text-brand-700 grid place-items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12c0 1.64.393 3.18 1.09 4.54L2 22l5.46-1.09A9.96 9.96 0 0012 22z"/></svg>
+            </div>
+            <h3 class="mt-4 font-bold text-slate-900">Recibir y atender alertas</h3>
+            <p class="mt-2 text-sm text-slate-600">Notificaciones en tiempo real para ti y tus entidades suscritas, con estado de atención.</p>
+          </article>
+          <!-- Item -->
+          <article class="rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition bg-white">
+            <div class="size-10 rounded-lg bg-brand-100 text-brand-700 grid place-items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5"><path d="M16 11V7a4 4 0 10-8 0v4H6v10h12V11h-2zm-6 0V7a2 2 0 114 0v4h-4z"/></svg>
+            </div>
+            <h3 class="mt-4 font-bold text-slate-900">Contactos de emergencia</h3>
+            <p class="mt-2 text-sm text-slate-600">Gestiona contactos de confianza y notíficales automáticamente en emergencias.</p>
+          </article>
+          <!-- Item -->
+          <article class="rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition bg-white">
+            <div class="size-10 rounded-lg bg-brand-100 text-brand-700 grid place-items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5"><path d="M12 3l8 4v6c0 5-3.5 9.74-8 11-4.5-1.26-8-6-8-11V7l8-4z"/></svg>
+            </div>
+            <h3 class="mt-4 font-bold text-slate-900">Suscripción a entidades</h3>
+            <p class="mt-2 text-sm text-slate-600">Súmate a grupos de seguridad (policía, privadas, barrios) y recibe su asistencia.</p>
+          </article>
+          <!-- Item -->
+          <article class="rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition bg-white">
+            <div class="size-10 rounded-lg bg-brand-100 text-brand-700 grid place-items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm-7 9a7 7 0 0114 0H5z"/></svg>
+            </div>
+            <h3 class="mt-4 font-bold text-slate-900">Perfil personalizable</h3>
+            <p class="mt-2 text-sm text-slate-600">Configura tus datos, barrios/grupos y preferencias de notificación.</p>
+          </article>
+          <!-- Item -->
+          <article class="rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition bg-white">
+            <div class="size-10 rounded-lg bg-brand-100 text-brand-700 grid place-items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5"><path d="M7 4h10v2H7V4zm0 4h10v2H7V8zm0 4h7v2H7v-2zm0 4h10v2H7v-2z"/></svg>
+            </div>
+            <h3 class="mt-4 font-bold text-slate-900">Historial y registro</h3>
+            <p class="mt-2 text-sm text-slate-600">Consulta tus alertas enviadas/recibidas y su estado en una línea de tiempo.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cómo funciona -->
+    <section id="how" class="py-16 lg:py-24 bg-slate-50">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">Cómo funciona</h2>
+            <ol class="mt-6 space-y-5">
+              <li class="flex items-start gap-4">
+                <span class="size-8 rounded-full bg-brand-600 text-white grid place-items-center font-bold">1</span>
+                <div>
+                  <p class="font-semibold text-slate-900">Instala y crea tu perfil</p>
+                  <p class="text-sm text-slate-600">Descarga el APK, regístrate y agrega tus contactos de confianza.</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-4">
+                <span class="size-8 rounded-full bg-brand-600 text-white grid place-items-center font-bold">2</span>
+                <div>
+                  <p class="font-semibold text-slate-900">Suscríbete a entidades</p>
+                  <p class="text-sm text-slate-600">Elige barrios o entidades de seguridad para recibir atención prioritaria.</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-4">
+                <span class="size-8 rounded-full bg-brand-600 text-white grid place-items-center font-bold">3</span>
+                <div>
+                  <p class="font-semibold text-slate-900">Activa el botón de pánico</p>
+                  <p class="text-sm text-slate-600">Con un toque, envías tu ubicación y se notifica a tus contactos y entidades.</p>
+                </div>
+              </li>
+            </ol>
+            <div class="mt-8">
+              {% if latest_download_url %}
+              <a href="{{ latest_download_url }}" class="inline-flex items-center gap-3 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white px-5 py-3 text-base shadow-md transition">
+                Descargar APK ahora
+              </a>
+              {% endif %}
+              <p class="mt-2 text-xs text-slate-500">Si tu teléfono pide permisos de instalación desde orígenes desconocidos, habilítalos temporalmente.</p>
+            </div>
+          </div>
+          {% if reference_images %}
+          <div class="grid sm:grid-cols-2 gap-6">
+            {% for image in reference_images %}
+            <div class="rounded-2xl bg-white p-4 border border-slate-200 shadow-sm">
+              <div class="aspect-[4/5] rounded-xl bg-slate-100 overflow-hidden flex items-center justify-center">
+                <img src="{{ image.url }}" alt="{{ image.alt|default:'Screenshot' }}" class="object-contain h-full w-full rounded-xl" />
+              </div>
+              <p class="mt-3 text-sm text-slate-500">{{ image.caption|default:'Screenshot' }}</p>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+
+    <!-- Versiones -->
+    {% if app and app.versions.exists %}
+    <section class="py-12">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-extrabold text-center mb-8">Versiones disponibles</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {% for v in app.versions.all|dictsortreversed:"created_at" %}
+            <article class="rounded-xl border border-gray-100 bg-white p-6 shadow hover:shadow-lg transition">
+              <div class="flex items-center justify-between">
+                <h3 class="font-semibold text-brand-600">{{ v.get_platform_display }}</h3>
+                {% if v.is_prerelease %}<span class="rounded-full bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1">Pre-release</span>{% endif %}
+              </div>
+              <p class="mt-1 text-sm text-gray-500">v{{ v.version }}</p>
+              <div class="mt-5">
+                {% if v.file %}
+                  <a href="{{ v.file.url }}" class="inline-flex w-full items-center justify-center rounded-full bg-brand-600 px-4 py-2 text-white font-bold hover:bg-brand-700">Descargar</a>
+                {% elif v.external_link %}
+                  <a href="{{ v.external_link }}" target="_blank" class="inline-flex w-full items-center justify-center rounded-full bg-white px-4 py-2 text-gray-900 font-semibold border border-gray-200 hover:bg-gray-50">Enlace externo</a>
+                {% else %}
+                  <span class="inline-flex w-full items-center justify-center rounded-full bg-gray-100 px-4 py-2 text-gray-500">No disponible</span>
+                {% endif %}
+              </div>
+            </article>
+          {% empty %}
+            <div class="col-span-full text-center text-gray-500">No hay versiones publicadas.</div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    {% endif %}
+
+    <!-- CTA secundaria -->
+    <section class="py-12">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="rounded-3xl bg-gradient-to-r from-brand-600 to-brand-700 p-8 md:p-12 text-white overflow-hidden relative">
+          <div class="absolute right-0 top-0 -mr-24 -mt-24 size-64 bg-white/10 rounded-full blur-2xl"></div>
+          <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <h3 class="text-2xl md:text-3xl font-extrabold">Protección al alcance de tu mano</h3>
+              <p class="mt-2 text-white/90">Instala la app, configura tus contactos y prueba el botón de pánico en segundos.</p>
+            </div>
+            <div class="md:text-right">
+              {% if latest_download_url %}
+              <a href="{{ latest_download_url }}" class="inline-flex items-center gap-3 rounded-2xl bg-white text-slate-900 hover:bg-slate-100 px-5 py-3 font-semibold shadow">
+                Descargar APK
+              </a>
+              {% endif %}
+              <p class="mt-2 text-xs text-white/70">Disponible solo para Android por ahora</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="py-16 lg:py-24">
+      <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 text-center">Preguntas frecuentes</h2>
+        <div class="mt-8 divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
+          <details class="group p-6">
+            <summary class="flex cursor-pointer items-center justify-between font-semibold text-slate-900">¿La app funciona sin conexión?
+              <span class="transition group-open:rotate-180">
+                <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.188l3.71-3.957a.75.75 0 111.08 1.04l-4.24 4.52a.75.75 0 01-1.08 0l-4.24-4.52a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+              </span>
+            </summary>
+            <p class="mt-3 text-sm text-slate-600">Necesitas conexión para enviar/recibir alertas y compartir ubicación. Algunas acciones del perfil están disponibles offline.</p>
+          </details>
+          <details class="group p-6">
+            <summary class="flex cursor-pointer items-center justify-between font-semibold text-slate-900">¿Es seguro instalar desde APK?
+              <span class="transition group-open:rotate-180">
+                <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.188l3.71-3.957a.75.75 0 111.08 1.04l-4.24 4.52a.75.75 0 01-1.08 0l-4.24-4.52a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+              </span>
+            </summary>
+            <p class="mt-3 text-sm text-slate-600">Sí, siempre que descargues desde el enlace oficial. Android puede pedir habilitar "orígenes desconocidos" temporalmente.</p>
+          </details>
+          <details class="group p-6">
+            <summary class="flex cursor-pointer items-center justify-between font-semibold text-slate-900">¿Planean versión para iOS?
+              <span class="transition group-open:rotate-180">
+                <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.188l3.71-3.957a.75.75 0 111.08 1.04l-4.24 4.52a.75.75 0 01-1.08 0l-4.24-4.52a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+              </span>
+            </summary>
+            <p class="mt-3 text-sm text-slate-600">Sí, está en el roadmap. Por ahora optimizamos la versión Android para mayor estabilidad.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 py-10">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="size-8 rounded-lg bg-brand-500 text-white grid place-items-center font-extrabold">SK</div>
+          <p class="text-sm text-slate-500">© <span id="year"></span> {{ app.name }}. Todos los derechos reservados.</p>
+        </div>
+        <div class="flex items-center gap-6 text-sm">
+          <a href="#" class="text-slate-500 hover:text-slate-700">Política de privacidad</a>
+          <a href="#" class="text-slate-500 hover:text-slate-700">Términos</a>
+          <a href="#" class="text-slate-500 hover:text-slate-700">Contacto</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Año dinámico
+      document.getElementById('year').textContent = new Date().getFullYear()
+
+      // (Opcional) Analítica mínima del CTA
+      const cta = document.getElementById('download-cta')
+      cta?.addEventListener('click', () => {
+        console.log('[analytics] click_descargar_apk', new Date().toISOString())
+      })
+    </script>
+    {% else %}
+    <div class="max-w-2xl mx-auto py-20 text-center">
+      <h2 class="text-3xl font-black text-brand-700 mb-4">Configuración requerida</h2>
+      <p class="text-lg text-gray-700 mb-6">Debes registrar una única app para mostrar el website principal.</p>
+      <ul class="list-disc pl-6 text-left inline-block">
+        {% for app in apps %}
+          <li>{{ app.name }}</li>
+        {% empty %}
+          <li>No hay apps registradas.</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </body>
+</html>
