@@ -1,6 +1,7 @@
 from urllib.parse import quote
 
 from django.conf import settings
+from django.core.cache import cache
 from django.db import models
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
@@ -162,6 +163,53 @@ class Feature(IconMixin):
 
     def __str__(self):
         return f"{self.title} ({self.get_audience_display()})"
+
+
+class SiteImageSlot(models.TextChoices):
+    """Cada hueco de imagen del sitio que no pertenece a un plan ni a una
+    funcionalidad. Antes estaban fijos en las plantillas."""
+
+    PANEL = "panel", "Captura del panel administrativo"
+    LOGO = "logo", "Logo de la marca"
+    OG = "og", "Imagen para redes sociales"
+
+
+SITE_IMAGES_CACHE_KEY = "marketing:site_images"
+
+
+class SiteImage(models.Model):
+    slot = models.CharField(
+        "Ubicacion", max_length=20, choices=SiteImageSlot.choices, unique=True,
+        help_text="Donde se muestra la imagen. Solo puede haber una por ubicacion.",
+    )
+    image = models.ImageField(
+        "Imagen", upload_to="sitio/",
+        help_text=(
+            "Medidas recomendadas: panel 1600x1000 px, logo 512x512 px (fondo "
+            "transparente), redes sociales 1200x630 px."
+        ),
+    )
+    alt_text = models.CharField(
+        "Texto alternativo", max_length=200, blank=True,
+        help_text="Descripcion breve para lectores de pantalla y buscadores.",
+    )
+    updated_at = models.DateTimeField("Actualizada", auto_now=True)
+
+    class Meta:
+        verbose_name = "Imagen del sitio"
+        verbose_name_plural = "Imagenes del sitio"
+        ordering = ["slot"]
+
+    def __str__(self):
+        return self.get_slot_display()
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete(SITE_IMAGES_CACHE_KEY)
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        cache.delete(SITE_IMAGES_CACHE_KEY)
 
 
 class PageView(models.Model):

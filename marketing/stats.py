@@ -3,7 +3,7 @@ import hashlib
 from django.core.cache import cache
 from django.db.models import Count
 
-from .models import PageView
+from .models import SITE_IMAGES_CACHE_KEY, PageView, SiteImage
 
 CACHE_KEY = "marketing:site_stats"
 CACHE_SECONDS = 60
@@ -23,6 +23,22 @@ def build_visitor_key(request):
         ip = ip or request.META.get("REMOTE_ADDR", "")
         raw = f"anon:{ip}:{request.META.get('HTTP_USER_AGENT', '')}"
     return hashlib.sha256(raw.encode("utf-8", "ignore")).hexdigest()
+
+
+def get_site_images():
+    """Imagenes cargadas desde el admin, indexadas por ubicacion.
+
+    Se cachea para no consultar en cada request; el propio modelo invalida la
+    cache al guardar o borrar, asi un cambio en el admin se ve al instante.
+    """
+    images = cache.get(SITE_IMAGES_CACHE_KEY)
+    if images is None:
+        images = {
+            item.slot: {"url": item.image.url, "alt": item.alt_text}
+            for item in SiteImage.objects.exclude(image="")
+        }
+        cache.set(SITE_IMAGES_CACHE_KEY, images, CACHE_SECONDS)
+    return images
 
 
 def get_site_stats():

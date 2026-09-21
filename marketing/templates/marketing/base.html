@@ -8,8 +8,10 @@
     <meta property="og:title" content="{{ site_brand }}" />
     <meta property="og:description" content="{{ site_tagline }}" />
     <meta property="og:type" content="website" />
-    <!-- IMAGEN PENDIENTE: og-image de 1200x630 px. Subila a static/img/og-image.jpg -->
-    <meta property="og:image" content="{% static 'img/og-image.jpg' %}" />
+    {# Se carga en el admin, en Sitio web > Imagenes del sitio #}
+    {% if site_images.og %}
+    <meta property="og:image" content="{{ site_images.og.url }}" />
+    {% endif %}
     <meta name="theme-color" content="#141f52" />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232450f0' stroke-width='2'><path d='M12 3l7 3v5c0 4.42-2.99 8.54-7 9.75C7.99 19.54 5 15.42 5 11V6l7-3z'/></svg>" />
 
@@ -101,12 +103,17 @@
       <div class="h-1 w-full bg-gradient-to-r from-brand-600 via-accent-400 to-brand-600"></div>
       <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <a href="{% url 'marketing:home' %}" class="flex items-center gap-3">
-          <!-- LOGO PENDIENTE: reemplazar este SVG por una etiqueta img con static 'img/logo.svg' -->
+          {# Logo: se carga en el admin, en Sitio web > Imagenes del sitio. #}
+          {% if site_images.logo %}
+          <img src="{{ site_images.logo.url }}" alt="{{ site_images.logo.alt|default:site_brand }}"
+               class="size-10 rounded-xl object-contain" />
+          {% else %}
           <span class="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-brand-600 to-accent-500 text-white shadow-lg shadow-brand-600/30">
             <svg viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 3l7 3v5c0 4.42-2.99 8.54-7 9.75C7.99 19.54 5 15.42 5 11V6l7-3z" />
             </svg>
           </span>
+          {% endif %}
           <span class="leading-tight">
             <span class="block text-sm font-black tracking-tight text-brand-900 sm:text-base">{{ site_brand }}</span>
             <span class="hidden text-xs text-slate-500 sm:block">{{ site_tagline }}</span>
@@ -142,11 +149,16 @@
         <div class="grid gap-10 md:grid-cols-4">
           <div class="md:col-span-2">
             <div class="flex items-center gap-3">
+              {% if site_images.logo %}
+              <img src="{{ site_images.logo.url }}" alt="{{ site_images.logo.alt|default:site_brand }}"
+                   class="size-10 rounded-xl bg-white/10 object-contain p-1" />
+              {% else %}
               <span class="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-brand-500 to-accent-500 text-white">
                 <svg viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M12 3l7 3v5c0 4.42-2.99 8.54-7 9.75C7.99 19.54 5 15.42 5 11V6l7-3z" />
                 </svg>
               </span>
+              {% endif %}
               <p class="text-lg font-black text-white">{{ site_brand }}</p>
             </div>
             <p class="mt-4 max-w-md text-sm leading-relaxed text-slate-400">

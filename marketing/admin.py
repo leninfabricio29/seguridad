@@ -3,7 +3,7 @@ from django.utils.safestring import mark_safe
 from unfold.admin import ModelAdmin, TabularInline
 from unfold.decorators import display
 
-from .models import Feature, PageView, Plan, PlanFeature
+from .models import Feature, PageView, Plan, PlanFeature, SiteImage
 
 
 class PlanFeatureInline(TabularInline):
@@ -72,6 +72,22 @@ class FeatureAdmin(ModelAdmin):
     @display(description="Imagen", boolean=True)
     def has_image(self, obj):
         return bool(obj.image)
+
+
+@admin.register(SiteImage)
+class SiteImageAdmin(ModelAdmin):
+    list_display = ("slot", "preview", "updated_at")
+    readonly_fields = ("preview", "updated_at")
+    fields = ("slot", "image", "preview", "alt_text", "updated_at")
+
+    @display(description="Vista previa")
+    def preview(self, obj):
+        if not obj.image:
+            return "-"
+        return mark_safe(
+            f'<img src="{obj.image.url}" style="max-height:120px;max-width:320px;'
+            'border-radius:8px;border:1px solid #e2e8f0" />'
+        )
 
 
 @admin.register(PageView)

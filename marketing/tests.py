@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from releases.models import App, AppVersion
 
-from .models import Feature, PageView, Plan, PlanFeature
+from .models import Feature, PageView, Plan, PlanFeature, SiteImage
 
 
 class PlanModelTests(TestCase):
@@ -233,7 +233,61 @@ class ImagenDelPanelTests(TestCase):
         response = self.client.get(reverse("marketing:home"))
         self.assertContains(response, "/media/panel/heroEntidad.png")
 
-    def test_la_ruta_es_configurable(self):
+    def test_sin_fila_en_el_admin_cae_a_la_ruta_por_defecto(self):
+        SiteImage.objects.all().delete()
+        cache.clear()
         with self.settings(PANEL_IMAGE="panel/otra.png"):
             response = self.client.get(reverse("marketing:home"))
         self.assertEqual(response.context["panel_image_url"], "/media/panel/otra.png")
+
+
+class SiteImageTests(TestCase):
+    """Las imagenes del sitio se administran desde el admin."""
+
+    def setUp(self):
+        cache.clear()
+
+    def test_la_migracion_registro_la_captura_del_panel(self):
+        panel = SiteImage.objects.get(slot="panel")
+        self.assertEqual(panel.image.name, "panel/heroEntidad.png")
+        self.assertTrue(panel.alt_text)
+
+    def test_la_imagen_del_admin_tiene_prioridad(self):
+        SiteImage.objects.filter(slot="panel").update(image="sitio/nueva.png")
+        cache.clear()
+        response = self.client.get(reverse("marketing:home"))
+        self.assertEqual(response.context["panel_image_url"], "/media/sitio/nueva.png")
+        self.assertContains(response, "/media/sitio/nueva.png")
+
+    def test_solo_puede_haber_una_imagen_por_ubicacion(self):
+        from django.db import IntegrityError, transaction
+
+        with self.assertRaises(IntegrityError), transaction.atomic():
+            SiteImage.objects.create(slot="panel", image="sitio/otra.png")
+
+    def test_guardar_invalida_la_cache(self):
+        self.client.get(reverse("marketing:home"))  # deja la cache poblada
+        SiteImage.objects.get(slot="panel").save()
+        response = self.client.get(reverse("marketing:home"))
+        self.assertEqual(response.context["panel_image_url"], "/media/panel/heroEntidad.png")
+
+    def test_el_logo_se_usa_cuando_esta_cargado(self):
+        SiteImage.objects.create(slot="logo", image="sitio/logo.png", alt_text="Logo")
+        cache.clear()
+        response = self.client.get(reverse("marketing:home"))
+        self.assertContains(response, "/media/sitio/logo.png")
+
+    def test_sin_logo_se_muestra_el_escudo_por_defecto(self):
+        SiteImage.objects.filter(slot="logo").delete()
+        cache.clear()
+        response = self.client.get(reverse("marketing:home"))
+        self.assertNotContains(response, "/media/sitio/logo.png")
+
+    def test_la_imagen_de_redes_solo_aparece_si_esta_cargada(self):
+        response = self.client.get(reverse("marketing:home"))
+        self.assertNotContains(response, 'property="og:image"')
+
+        SiteImage.objects.create(slot="og", image="sitio/og.jpg")
+        cache.clear()
+        response = self.client.get(reverse("marketing:home"))
+        self.assertContains(response, 'property="og:image"')

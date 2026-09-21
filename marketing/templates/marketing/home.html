@@ -212,11 +212,12 @@
       {% endfor %}
     </div>
 
-    {# Captura del panel. La ruta se configura con PANEL_IMAGE en settings.py #}
+    {# Captura del panel: se carga en el admin, en Sitio web > Imagenes del sitio. #}
     <figure class="relative mt-16">
       <div class="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-accent-400/25 via-brand-500/20 to-violet-500/25"></div>
       <div class="glow-accent relative overflow-hidden rounded-2xl border border-white/15 bg-brand-900/60 p-2">
-        <img src="{{ panel_image_url }}" alt="Panel administrativo de {{ site_brand }}"
+        <img src="{{ panel_image_url }}"
+             alt="{{ site_images.panel.alt|default:'Panel administrativo de' }} {% if not site_images.panel.alt %}{{ site_brand }}{% endif %}"
              class="w-full rounded-xl" loading="lazy" />
       </div>
       <figcaption class="mt-4 text-center text-sm text-slate-400">
